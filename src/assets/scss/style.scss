@@ -1,0 +1,9 @@
+
+@import "../css/style.css";
+@import "../css/responsive.css";
+
+/* Make the image fully responsive */
+.carousel-inner img {
+    width: 100%;
+    height: 100%;
+}
