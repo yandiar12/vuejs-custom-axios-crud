@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <h1>Welcome Home breda...</h1>
+    <b-alert show><h1>Welcome Home breda...</h1></b-alert>
     <router-link tag="a" :to="{ name: 'add' }">Add Book</router-link>
     <br><br>
     <label for="search">Search Book : </label>

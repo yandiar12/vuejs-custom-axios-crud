@@ -1,20 +1,39 @@
 <template>
-  <div>
-    <router-link tag="a" :to="{ name: 'home' }">back to Home</router-link>
-    <h1 v-if="id !== undefined">Edit Book</h1>
-    <h1 v-else>Add Book</h1>
-    <form action="">
-      <input type="hidden" id="id">
-      <label for="name">Title :</label><br>
-      <input type="text" id="name" v-model="form.name"><br>
-      <label for="author">Author :</label><br>
-      <input type="text" id="author" v-model="form.author"><br>
-      <label for="publisher">Publisher :</label><br>
-      <input type="text" id="publisher" v-model="form.publisher"><br>
-      <label for="price">Price :</label><br>
-      <input type="number" id="price" v-model="form.price"><br><br>
-      <input type="button" value="submit" @click="submit($event)"><br>
-    </form>
+  <div class="container">
+    <b-row class="justify-content-center">
+      <b-col md="4" sm="6">
+        <b-card class="md-6" header="Form Book">
+          <h1>{{ title }}</h1>
+          
+          <b-form action="">
+            <input type="hidden" id="id">
+            <b-form-group label-for="name" label="Title:">
+              <b-form-input type="text" id="name" name="name" v-validate="'required'" v-model="form.name" :class="{ 'is-invalid': errors.has('name')}" />
+              <b-form-invalid-feedback class="invalid-feedback" v-if="errors.has('name')">{{ errors.first('name') }}</b-form-invalid-feedback>
+            </b-form-group>  
+            
+            <b-form-group label-for="author" label="Author:">
+              <b-form-input type="text" id="author" name="author" v-validate="'required'" v-model="form.author" :class="{ 'is-invalid': errors.has('author')}" />
+              <b-form-invalid-feedback class="invalid-feedback" v-if="errors.has('author')">{{ errors.first('author') }}</b-form-invalid-feedback>
+            </b-form-group>
+            
+            <b-form-group label-for="publisher" label="Publisher:">
+              <b-form-input type="text" id="publisher" name="publisher" v-validate="'required'" v-model="form.publisher" :class="{ 'is-invalid': errors.has('publisher')}" />
+              <b-form-invalid-feedback class="invalid-feedback" v-if="errors.has('publisher')">{{ errors.first('publisher') }}</b-form-invalid-feedback>
+            </b-form-group>  
+            
+            <b-form-group label-for="price" label="Price:">
+              <b-form-input type="number" id="price" name="price" v-validate="'required'" v-model="form.price" :class="{ 'is-invalid': errors.has('price')}" />
+              <b-form-invalid-feedback class="invalid-feedback" v-if="errors.has('price')">{{ errors.first('price') }}</b-form-invalid-feedback>
+            </b-form-group>  
+            
+            <b-button type="submit" variant="primary" @click="submit($event)">Submit</b-button><br>
+            <router-link tag="a" :to="{ name: 'home' }">back to Home</router-link>
+            
+          </b-form>
+        </b-card>  
+      </b-col>
+    </b-row>
   </div>
 </template>
 
@@ -28,6 +47,7 @@ export default {
   data() {
     return {
       id: this.$route.params.id,
+      title: '',
       form: {
         id: '',
         name: '',
@@ -39,9 +59,19 @@ export default {
   },
 
   methods: {
-    submit: async function(e) {
-      e.preventDefault()
+    submit(e) {
+      e.preventDefault();
+      
+      this.$validator.validate().then(valid => {
+          if (valid) {
+              this.addBook()
+          } else {
+            alert('Data is invalid')
+          }
+      });
+    },
 
+    addBook: async function() {
       const data = {
         name: this.form.name,
         author: this.form.author,
@@ -70,8 +100,10 @@ export default {
   },
   beforeMount() {
     if (this.id !== undefined) {
-      console.log('get ID')
+      this.title = 'Edit Book'
       this.getDataById()
+    } else {
+      this.title = 'Add Book'
     }
   },
 }
