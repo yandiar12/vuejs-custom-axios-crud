@@ -12,7 +12,7 @@ export default class ErrorService extends Error {
   showError () {
     
     const message = {
-      title: this.error.status === 500 ? 'Terjadi Kesalahan' : this.error.status ? 'Perhatian' : 'Jaringan Bermasalah',
+      title: this.error.status === 500 ? 'Something went wrong' : this.error.status ? 'Error' : 'Unexpected error',
       icon: this.error.status === 500 ? 'error' : this.error.success ? 'success' : this.error.status ? 'warning' : 'error',
       text: this.error.status === 500 ? this.error.message : this.error.status ? this.error.message : this.error.message.charAt(0).toUpperCase() + this.error.message.slice(1)
       // text: this.error.status === 500 ? 'System Exception' : this.error.status ? this.error.message : this.error.message.charAt(0).toUpperCase() + this.error.message.slice(1)
@@ -25,8 +25,8 @@ export default class ErrorService extends Error {
       //     // location.replace('/login')
       //   }
       // })
-      console.log(message.text)
-      alert('Something went wrong')
+      console.log(message)
+      // alert('Something went wrong')
     // }
   }
 

@@ -27,8 +27,14 @@
               <b-form-invalid-feedback class="invalid-feedback" v-if="errors.has('price')">{{ errors.first('price') }}</b-form-invalid-feedback>
             </b-form-group>  
             
-            <b-button type="submit" variant="primary" @click="submit($event)">Submit</b-button><br>
-            <router-link tag="a" :to="{ name: 'home' }">back to Home</router-link>
+            <b-row>
+              <b-col>
+                <b-button type="submit" variant="primary" @click="submit($event)">Submit</b-button>
+              </b-col>
+              <b-col class="text-right">
+                <router-link tag="a" :to="{ name: 'home' }">back to Home</router-link>
+              </b-col>
+            </b-row>
             
           </b-form>
         </b-card>  
@@ -64,14 +70,14 @@ export default {
       
       this.$validator.validate().then(valid => {
           if (valid) {
-              this.addBook()
+              this.save()
           } else {
             alert('Data is invalid')
           }
       });
     },
 
-    addBook: async function() {
+    save: async function() {
       const data = {
         name: this.form.name,
         author: this.form.author,
@@ -87,6 +93,7 @@ export default {
       }
       
       alert(response.message)
+      this.$router.push('/')
     },
 
     getDataById: async function() {
@@ -96,6 +103,14 @@ export default {
       this.form.author = response.data.author
       this.form.publisher = response.data.publisher
       this.form.price = response.data.price
+    },
+
+    resetForm() {
+      this.form.id = '';
+      this.form.name = '';
+      this.form.author = '';
+      this.form.publisher = '';
+      this.form.price = '';
     }
   },
   beforeMount() {
