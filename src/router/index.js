@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+const Page404 = () => import('@/views/Page404')
 const BookForm = () => import('@/views/BookForm')
 const Login = () => import('@/views/auth/Login')
 const Register = () => import('@/views/auth/Register')
@@ -41,7 +42,8 @@ const routes = [
     name: 'edit',
     component: BookForm,
     props: true
-  }
+  },
+  { path: "*", component: Page404 }
 ]
 
 const router = new VueRouter({
