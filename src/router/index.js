@@ -2,6 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 const BookForm = () => import('@/views/BookForm')
+const Login = () => import('@/views/auth/Login')
+const Register = () => import('@/views/auth/Register')
 
 Vue.use(VueRouter)
 
@@ -10,6 +12,16 @@ const routes = [
     path: '/',
     name: 'home',
     component: Home
+  },
+  {
+    path: '/sign-in',
+    name: 'login',
+    component: Login
+  },
+  {
+    path: '/sign-up',
+    name: 'register-user',
+    component: Register
   },
   {
     path: '/about',

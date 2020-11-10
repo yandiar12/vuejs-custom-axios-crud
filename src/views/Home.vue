@@ -64,7 +64,7 @@ export default {
     return {
       //cols: ['id', 'name', 'author', 'publisher', 'price', 'actions'],
       cols: [
-        {key: 'id', sortable: true},
+        // {key: 'id', sortable: true},
         {key: 'name', sortable: true},
         {key: 'author', sortable: true},
         {key: 'publisher', sortable: true},
@@ -80,7 +80,8 @@ export default {
   },
   methods: {
     getData: async function() {
-      const response = await bookService2.getAllData(0, 100, 'id')
+      const max_val = 2147483647
+      const response = await bookService2.getAllData(0, max_val, 'id')
       this.books = []
       if (response !== undefined) {
         this.currentPage = response.data.number + 1
