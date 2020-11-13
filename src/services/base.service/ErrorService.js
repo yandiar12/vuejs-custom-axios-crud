@@ -3,7 +3,6 @@
 
 export default class ErrorService extends Error {
   constructor (error) {
-    console.log('err', error.request)
     super(error)
     this.name = 'Error: '
     this.error = error.request.response === 'Invalid token' ? { status: 401, message: error.request.response } : error.request.response ? JSON.parse(error.request.response) : error

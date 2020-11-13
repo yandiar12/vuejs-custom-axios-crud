@@ -3,11 +3,12 @@ import service from '../../config/service.config'
 import BaseService from './BaseService'
 import ErrorService from './ErrorService'
 import { Deserialize, Serialize } from 'cerialize'
-// import { AuthService } from '../../service/Storage.service'
+import { AuthHeader } from '../../services/StorageService'
 
 /**
  * @typedef {Http}
  */
+
 export default class HttpService extends BaseService {
   static api = ''
   static entity = ''
@@ -33,9 +34,8 @@ export default class HttpService extends BaseService {
   }
 
   static setHeader () {
-    // const data = AuthService.getAuthdata()
-    // service.defaults.headers.common['Authorization'] = `Bearer ${data.token}`
-    // service.defaults.headers.common['appsource'] = process.env.VUE_APP_APPSOURCE
+    const data = AuthHeader.getAuthdata()
+    service.defaults.headers.common['Authorization'] = `Bearer ${data}`
     service.defaults.headers.common['Content-Type'] = 'application/json'
     service.defaults.headers.common['Accept'] = 'application/json'
   }
@@ -99,6 +99,7 @@ export default class HttpService extends BaseService {
           const alert = new ErrorService(e)
           alert.showError()
         }
+        throw e.response.data
       })
   }
 

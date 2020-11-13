@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import { AuthHeader } from '../services/StorageService'
 import Home from '../views/Home.vue'
+
 const Page404 = () => import('@/views/Page404')
 const BookForm = () => import('@/views/BookForm')
 const Login = () => import('@/views/auth/Login')
@@ -48,8 +50,25 @@ const routes = [
 
 const router = new VueRouter({
   mode: 'history',
-  base: process.env.BASE_URL,
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  const publicPages = ['/sign-in', '/sign-up']
+  const authRequired = !publicPages.includes(to.path)
+  const token = AuthHeader.getAuthData()
+  const loggedIn = !!token
+
+  if (authRequired && !loggedIn) {
+    return next({
+      path: '/sign-in',
+      query: { redirect: to.fullPath }
+    })
+  } else if (!authRequired && loggedIn) { 
+    return next('/')
+  } else {
+    return next()
+  }
 })
 
 export default router

@@ -1,6 +1,9 @@
 <template>
   <div class="home">
-    <b-alert show><h1>Welcome Home breda...</h1></b-alert>
+    <b-alert show>
+      <h1>Welcome Home breda...</h1>
+      <a href="#" @click.prevent="onlogout()">log-out</a>
+    </b-alert>
     
     <b-row>
       <b-col md="3" style="padding-bottom: 15px;">
@@ -40,22 +43,12 @@
       </template>
     </b-table>
     <b-pagination align="center" v-model="currentPage" :total-rows="totalCount" :per-page="perPage" aria-controls="my-table"></b-pagination>
-
-    <!-- <div v-for="book in books" :key="book.id">
-      Title : <b>{{ book.name }}</b><br>
-      Author : <b>{{ book.author }}</b><br>
-      Price : <b>{{ book.price }}</b><br>
-      <router-link tag="a" :to="{ path: '/edit/' + book.id }">Edit</router-link>
-      <span> - </span>
-      <a href="#" @click="deleteBook(book.id)">Delete</a>
-      <br><br>
-    </div> -->
   </div>
 </template>
 
 <script>
 import BookService2 from '../services/BookService2.js'
-
+import { mapActions } from 'vuex'
 const bookService2 = BookService2.build()
 
 export default {
@@ -79,6 +72,10 @@ export default {
     }
   },
   methods: {
+    ...mapActions('auth', [
+      'logout'
+    ]),
+
     getData: async function() {
       const max_val = 2147483647
       const response = await bookService2.getAllData(0, max_val, 'id')
@@ -111,11 +108,14 @@ export default {
     deleteBook: async function(id) {
       const response = await bookService2.deleteBook(id)
       alert(response.message)
+    },
+
+    onlogout() {
+      this.logout()
     }
   },
   beforeMount() {
     this.getData()
-    // this.getDataById()
   }
 }
 </script>
