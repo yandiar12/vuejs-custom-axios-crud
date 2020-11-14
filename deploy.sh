@@ -10,6 +10,7 @@ cd dist
 git init
 git add -A
 git commit -m 'deploy'
-git push -f git@github.com:yandiar12/vuejs-custom-axios-crud.git main:gh-pages
+# git push -f git@github.com:yandiar12/vuejs-custom-axios-crud.git main:gh-pages
+git push -f https://github.com/yandiar12/vuejs-custom-axios-crud.git main:gh-pages
 
 cd -
