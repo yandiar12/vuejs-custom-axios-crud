@@ -74,11 +74,17 @@ export default {
               error => {
                 console.log('Failed login ', error)
                 this.isError = true
-                this.messageError = error.message
+                if (!error.message.includes('undefined')) {
+                  this.messageError = error.message
+                } else {
+                  this.messageError = 'somtehing went wrong'
+                }
                 this.loading = false
               }
             )
-          } 
+          } else {
+            this.loading = false
+          }
       });
     }
   },

@@ -256,6 +256,7 @@ export default class HttpService extends BaseService {
           const alert = new ErrorService(e)
           alert.showError()
         }
+        throw e.response.data
       })
   }
 

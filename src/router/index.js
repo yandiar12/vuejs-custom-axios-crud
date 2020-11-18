@@ -7,6 +7,7 @@ const Page404 = () => import('@/views/Page404')
 const BookForm = () => import('@/views/BookForm')
 const Login = () => import('@/views/auth/Login')
 const Register = () => import('@/views/auth/Register')
+const UploadFile = () => import('@/views/UploadFileForm')
 
 Vue.use(VueRouter)
 
@@ -44,6 +45,11 @@ const routes = [
     name: 'edit',
     component: BookForm,
     props: true
+  },
+  {
+    path: '/uploadfiles',
+    name: 'uploadFiles',
+    component: UploadFile
   },
   { path: "*", component: Page404 }
 ]
