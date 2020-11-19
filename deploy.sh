@@ -2,7 +2,7 @@
 # abort on errors
 set -e
 # build
-npm run build
+npm run build-dev
 # navigate into the build output directory
 cd dist
 # if you are deploying to a custom domain

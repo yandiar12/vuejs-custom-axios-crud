@@ -7,13 +7,12 @@
             <h6 class="mb-0">Upload Single File</h6>
           </template>
           <b-form>
-            <b-progress v-show="(progressFile > 0)" :value="progressFile" :max="100" show-progress animated></b-progress>
             <b-form-group label="File:" label-for="file">
               <b-form-file type="file" @change="selectFile($event)" ref="file" id="file" name="file" v-validate="'required'" :class="{ 'is-invalid': errors.has('file')}" ></b-form-file>
               <b-form-invalid-feedback class="invalid-feedback" v-if="errors.has('file')">{{ errors.first('file') }}</b-form-invalid-feedback>
             </b-form-group>
           </b-form>
-          <b-button @click="onSubmitSingleFile" variant="primary">Upload</b-button>
+          <b-button @click="onSubmitSingleFile" variant="primary"><b-spinner small v-show="loading"></b-spinner> Upload</b-button>
           <template #footer>
             <h6>Result: {{ messageResponseSingle }}</h6>
             <div v-if="(responseSingleForm.fileName != '')"> 
@@ -31,13 +30,12 @@
             <h6 class="mb-0">Upload Multiple Files</h6>
           </template>
           <b-form>
-            <b-progress v-show="(progressMultiFile > 0)" :value="progressMultiFile" :max="100" variant="warning" show-progress animated></b-progress>
             <b-form-group label="Files:" label-for="files">
               <b-form-file type="file" @change="selectMultiFiles" id="files" name="files" v-validate="'required'" :class="{ 'is-invalid': errors.has('files')}" multiple ></b-form-file>
               <b-form-invalid-feedback class="invalid-feedback" v-if="errors.has('files')">{{ errors.first('files') }}</b-form-invalid-feedback>
             </b-form-group>
           </b-form>
-          <b-button @click="onSubmitMultiFile" variant="primary">Upload</b-button>
+          <b-button @click="onSubmitMultiFile" variant="primary"><b-spinner small v-show="loadingMulti"></b-spinner> Upload</b-button>
           <template #footer>
             <h6>Result: {{ messageResponseMulti }}</h6>
             <div v-if="!!responseMultiForm">
@@ -72,8 +70,8 @@ export default {
         size: 0
       },
       responseMultiForm: undefined,
-      progressFile: 0,
-      progressMultiFile: 0,
+      loading: false,
+      loadingMulti: false,
       selectedFile: undefined,
       selectedMultiFiles: undefined
     }
@@ -88,10 +86,12 @@ export default {
       console.log(this.selectedMultiFiles)
     },
     onSubmitSingleFile: async function() {
+      this.loading = true
       const formData = new FormData()
       formData.append('file', this.selectedFile.item(0))
       return await uploadService.upload(formData).then(
         (response) => {
+          this.loading = false
           console.log(response)
           this.messageResponseSingle = "File successfully uploaded"
           this.responseSingleForm.fileName = response.fileName
@@ -100,12 +100,14 @@ export default {
           this.responseSingleForm.size = response.size
         },
         err => {
+          this.loading = false
           console.log(err)
           this.messageResponseSingle = err.message
         }
       )
     },
     onSubmitMultiFile: async function() {
+      this.loadingMulti = true
       const formData = new FormData()
       for (var i = 0; i < this.selectedMultiFiles.length; i++) {
         formData.append('files', this.selectedMultiFiles.item(i))
@@ -113,11 +115,13 @@ export default {
 
       return await uploadService.uploadMultipleFiles(formData).then(
         (response) => {
+          this.loadingMulti = false
           console.log(response)
           this.messageResponseMulti = "All Files successfully uploaded"
           this.responseMultiForm = response
         },
         err => {
+          this.loadingMulti = false
           console.log(err)
           this.messageResponseMulti = err.message
         }
