@@ -1,5 +1,5 @@
 // import swall from 'sweetalert'
-// import storage from '../../commons/config/storage.config'
+import {AuthHeader} from '../StorageService'
 
 export default class ErrorService extends Error {
   constructor (error) {
@@ -17,16 +17,16 @@ export default class ErrorService extends Error {
       // text: this.error.status === 500 ? 'System Exception' : this.error.status ? this.error.message : this.error.message.charAt(0).toUpperCase() + this.error.message.slice(1)
     }
 
-    // if (this.error.status === 500) {
-      // swall(message).then((result) => {
-      //   if (result) {
-      //     // storage.clearSession()
-      //     // location.replace('/login')
-      //   }
-      // })
+    if (this.error.status === 401) {
+      alert('Session is expired, Please login.').then((result) => {
+        if (result) {
+          AuthHeader.removeAuthData()
+          location.replace('/login')
+        }
+      })
+    } else {
       console.log(message)
-      // alert('Something went wrong')
-    // }
+    }
   }
 
   // showErrorUpload () {
