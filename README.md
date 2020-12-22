@@ -1,5 +1,8 @@
 # VUEJS CUSTOM AXIOS CRUD
-
+## Demo
+```
+https://yandiar12.github.io/vuejs-custom-axios-crud/ 
+```
 ## Project setup
 ```
 npm install
