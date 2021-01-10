@@ -1,8 +1,8 @@
 <template>
   <div class="container">
     <b-row class="justify-content-center">
-      <b-col md="4" sm="6">
-        <b-card class="md-6" header="Form Book">
+      <b-col cols="sm-6 md-4">
+        <b-card class="sm-6 md-4" header="Form Book">
           <h1>{{ title }}</h1>
           
           <b-form action="">

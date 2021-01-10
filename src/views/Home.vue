@@ -1,74 +1,52 @@
 <template>
   <div class="home">
-    <b-alert show>
-      <h1>Welcome Home breda...</h1>
-      <a href="#" @click.prevent="onlogout()">log-out</a>
-    </b-alert>
-    
-    <b-row>
-      <b-col md="3" style="padding-bottom: 15px;">
-        <b-button variant="outline-primary" :to="{ name: 'add' }">
-          <i class="fa fa-plus">&nbsp;</i>
-          Add Book
-        </b-button>
-      </b-col>
-    </b-row>
-    
-    <b-row>
-      <b-col>
-        <h3>Book Best Seller</h3>
-      </b-col>
-      <b-col>
-        <b-form class="pull-right" inline>
-          <label class="mr-sm-2" for="search">Search Book</label>
-          <b-form-input type="text" name="search" id="searchText" v-model="searchText" @keyup="getDataByName()" placeholder="Title of Book"/>
-        </b-form>
-      </b-col>
-    </b-row>
+    <b-navbar toggleable="lg" type="dark" variant="dark">
+      <b-navbar-brand to="/">Home</b-navbar-brand>
 
-    <b-table striped hover outlined :per-page="perPage" :items="books" :current-page="currentPage" :fields="cols">
-      <template v-slot:cell(actions)="book">
-        <b-row>
-          <b-col cols="sm-2">
-            <b-button size="sm" variant="outline-success" :to="{ path: '/edit/' + book.item.id }">
-              <i class="fa fa-pencil"></i>
-            </b-button>
-          </b-col>
-          <b-col cols="sm-2">
-            <b-button size="sm" variant="outline-danger" @click="deleteBook(book.item.id)">
-              <i class="fa fa-trash"></i>
-            </b-button>
-          </b-col>
-        </b-row>
-      </template>
-    </b-table>
-    <b-pagination align="center" v-model="currentPage" :total-rows="totalCount" :per-page="perPage" aria-controls="my-table"></b-pagination>
+      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+
+      <b-collapse id="nav-collapse" is-nav>
+        <b-navbar-nav>
+          <b-nav-item :to="{ name: `add` }">
+            Add Book
+          </b-nav-item>
+          <b-nav-item :to="{ name: `uploadFiles` }">
+            Upload Files
+          </b-nav-item>
+        </b-navbar-nav>
+
+        <!-- Right aligned nav items -->
+        <b-navbar-nav class="ml-auto">
+          <b-nav-item-dropdown toggle-class="text-decoration-none" no-caret right>
+            <!-- Using 'button-content' slot -->
+            <template #button-content>
+              <b-avatar v-if="authData.data.avatarUrl" class="mr-3" size="sm" :src="authData.data.avatarUrl"></b-avatar>
+              <b-avatar v-else class="mr-3" size="sm"></b-avatar>
+              <span class="mr-auto"><strong>{{ authData.data.name }}</strong></span>
+            </template>
+            <b-dropdown-item :to="{ name: `profile` }">Profile</b-dropdown-item>
+            <b-dropdown-item @click="onlogout()">Sign Out</b-dropdown-item>
+          </b-nav-item-dropdown>
+        </b-navbar-nav>
+      </b-collapse>
+    </b-navbar>
+    
+    <b-container class="content-wrapper">
+      <transition name="show">
+        <router-view></router-view>
+      </transition>
+    </b-container>  
   </div>
 </template>
 
 <script>
-import BookService2 from '../services/BookService2.js'
 import { mapActions } from 'vuex'
-const bookService2 = BookService2.build()
-
+import { AuthHeader } from '../services/StorageService'
 export default {
   name: 'home',
   data() {
     return {
-      //cols: ['id', 'name', 'author', 'publisher', 'price', 'actions'],
-      cols: [
-        // {key: 'id', sortable: true},
-        {key: 'name', sortable: true},
-        {key: 'author', sortable: true},
-        {key: 'publisher', sortable: true},
-        {key: 'price', sortable: true},
-        {key: 'actions', sortable: false}
-      ],
-      searchText: '',
-      currentPage: 1,
-      perPage: 10,
-      totalCount: 0,
-      books: []
+      authData: AuthHeader.getAuthData()
     }
   },
   methods: {
@@ -76,46 +54,24 @@ export default {
       'logout'
     ]),
 
-    getData: async function() {
-      const max_val = 2147483647
-      const response = await bookService2.getAllData(0, max_val, 'id')
-      this.books = []
-      if (response !== undefined) {
-        this.currentPage = response.data.number + 1
-        this.perPage = 10//response.data.size
-        this.totalCount = response.data.totalElements
-        for (var i = 0; i < response.data.content.length; i++) {
-          this.books.push(response.data.content[i])
-        }
-      } else {
-        alert('Failed to fetch data')
-      }
-    },
-
-    getDataByName: async function() {
-      const response = await bookService2.getAllByName(this.searchText, 'id')
-      this.books = []
-      for (var i = 0; i < response.data.content.length; i++) {
-        this.books.push(response.data.content[i])
-      }
-    },
-
-    getDataById: async function() {
-      const response = await bookService2.getDataById(25)
-      this.books.push(response.data)
-    },
-
-    deleteBook: async function(id) {
-      const response = await bookService2.deleteBook(id)
-      alert(response.message)
-    },
-
     onlogout() {
       this.logout()
     }
-  },
-  beforeMount() {
-    this.getData()
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.content-wrapper {
+  margin-top: 15px;
+}
+.show-enter-active,
+.show-leave-enter {
+    transform: translateX(0);
+    transition: all .3s linear;
+}
+.show-enter,
+.show-leave-to {
+    transform: translateX(100%);
+}
+</style>

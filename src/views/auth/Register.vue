@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <b-row class="justify-content-center">
+    <b-row class="justify-content-center login-overlay">
       <b-col md="4" sm="6">
         <b-card>
           <h3 class="text-center">Sign up</h3>
@@ -95,6 +95,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+.login-overlay {
+  margin-top: 50px;
+}
 </style>

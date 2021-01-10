@@ -19,7 +19,4 @@ export default {
 $fa-font-path: '~font-awesome/fonts/';
 @import '~font-awesome/scss/font-awesome.scss';
 
-body {
-  padding: 20px;
-}
 </style>
