@@ -20,9 +20,9 @@
           <b-nav-item-dropdown toggle-class="text-decoration-none" no-caret right>
             <!-- Using 'button-content' slot -->
             <template #button-content>
-              <b-avatar v-if="authData.data.avatarUrl" class="mr-3" size="sm" :src="authData.data.avatarUrl"></b-avatar>
+              <b-avatar v-if="avatarUrl" class="mr-3" size="sm" :src="avatarUrl"></b-avatar>
               <b-avatar v-else class="mr-3" size="sm"></b-avatar>
-              <span class="mr-auto"><strong>{{ authData.data.name }}</strong></span>
+              <span class="mr-auto"><strong>{{ userName }}</strong></span>
             </template>
             <b-dropdown-item :to="{ name: `profile` }">Profile</b-dropdown-item>
             <b-dropdown-item @click="onlogout()">Sign Out</b-dropdown-item>
@@ -42,11 +42,15 @@
 <script>
 import { mapActions } from 'vuex'
 import { AuthHeader } from '../services/StorageService'
+import UserService from '../services/UserService'
+
 export default {
   name: 'home',
   data() {
     return {
-      authData: AuthHeader.getAuthData()
+      authData: AuthHeader.getAuthData(),
+      userName: '',
+      avatarUrl: undefined
     }
   },
   methods: {
@@ -54,9 +58,26 @@ export default {
       'logout'
     ]),
 
+    getUser() {
+      const email = this.authData.email
+      UserService.getUserByEmail(email).then(
+        res => {
+          console.log(res)
+          this.userName = res.data.name
+          this.avatarUrl = res.data.avatarUrl || undefined
+        },
+        err => {
+          console.log(err)
+        }
+      )
+    },
+
     onlogout() {
       this.logout()
     }
+  },
+  beforeMount() {
+    this.getUser()
   }
 }
 </script>

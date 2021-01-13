@@ -1,11 +1,16 @@
-import HttpService from './base.service/HttpService.js'
+import service from '../config/service.config'
+import { AuthHeader } from '../services/StorageService'
 
-export default class UserService extends HttpService {
-  static api = process.env.VUE_APP_ROOT_API
-
-  update(data) {
-    const end_point = this.api + '/user/update'
-    return this.postBodyJsonAndParam(data, end_point)
+const UserService = {
+  getUserByEmail(email) {
+    const api_url = process.env.VUE_APP_ROOT_API + 'user?email=' + email
+    const options = {
+      headers : {
+        'Authorization': 'Bearer ' + AuthHeader.getAuthData().token
+      }
+    }
+    return service.get(api_url, options)
   }
-
 }
+
+export default UserService

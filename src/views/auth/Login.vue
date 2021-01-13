@@ -30,10 +30,8 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
-// import AuthService from '../../services/AuthService'
-// const authService = AuthService.build()
-
+import AuthService from '../../services/AuthService'
+import store from '../../store'
 export default {
   name: 'login',
   data() {
@@ -48,10 +46,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions('auth', [
-      'login'
-    ]),
-
     onLogin(e) {
       e.preventDefault();
       
@@ -62,24 +56,17 @@ export default {
               email: this.form.email,
               password: this.form.password
             }
-            this.login(data).then(
+            AuthService.login(data).then(
               (res) => {
-                if (res.data) {
-                  this.$router.replace('/')
-                } else {
-                  console.log(res)
-                }
+                store.commit('auth/loginSuccess', res.data)
                 this.loading = false
+                this.$router.replace('/')
               },
-              error => {
-                console.log('Failed login ', error)
-                this.isError = true
-                if (!error.message.includes('undefined')) {
-                  this.messageError = error.message
-                } else {
-                  this.messageError = 'somtehing went wrong'
-                }
-                this.loading = false
+                (error) => {
+                  console.log('Failed login ', error)
+                  this.isError = true
+                  this.messageError = error.message || 'Something went wrong'
+                  this.loading = false
               }
             )
           } else {

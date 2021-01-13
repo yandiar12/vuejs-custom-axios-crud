@@ -41,8 +41,6 @@
 <script>
 import AuthService from '../../services/AuthService'
 
-const authService = AuthService.build()
-
 export default {
   name: 'register',
   data() {
@@ -71,7 +69,7 @@ export default {
             passwd: this.form.password
           }
 
-          authService.register(data).then(
+          AuthService.register(data).then(
             (res) => {
               this.error = false
               this.isSuccess = true
@@ -85,6 +83,8 @@ export default {
               this.loading = false
               if (error.status == 500) {
                 this.message = "Something went wrong!"
+              } else {
+                this.message = error.message
               }
             }
           )

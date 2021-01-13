@@ -1,9 +1,7 @@
 
-import AuthService from '../services/AuthService'
 import { AuthHeader } from '../services/StorageService'
 import Router from '../router/index'
 
-const authService = AuthService.build()
 const AuthData = AuthHeader.getAuthData()
 
 const state = {
@@ -25,20 +23,6 @@ const getters = {
 }
 
 const actions = {
-  login ({ commit }, data) {
-    return authService.login(data).then(
-      data => {
-        console.log('data: ', data)
-        commit('loginSuccess', data)
-        AuthHeader.saveAuthData(data)
-        return Promise.resolve(data)
-      }, error => {
-        console.log(error)
-        throw error
-      }
-    )
-  },
-
   async logout ({ commit }) {
     try {
       AuthHeader.removeAuthData()
@@ -54,12 +38,7 @@ const actions = {
 const mutations = {
 
   loginSuccess (state, data) {
-    state.authName = data.name
-    state.authEmail = data.email
-    state.accessToken = data.token
-  },
-
-  loginFailure (state, data) {
+    AuthHeader.saveAuthData(data)
     state.authName = data.name
     state.authEmail = data.email
     state.accessToken = data.token

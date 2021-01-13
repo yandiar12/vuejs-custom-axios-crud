@@ -46,8 +46,6 @@
 <script>
 import BookService2 from '../services/BookService2.js'
 
-const bookService = BookService2.build()
-
 export default {
   name: 'formBook',
   data() {
@@ -87,9 +85,9 @@ export default {
 
       var response = null;
       if (this.id === undefined) {
-        response = await bookService.addBook(data)
+        response = await BookService2.addBook(data)
       } else {
-        response = await bookService.editBook(this.id, data)
+        response = await BookService2.editBook(this.id, data)
       }
       
       alert(response.message)
@@ -97,7 +95,7 @@ export default {
     },
 
     getDataById: async function() {
-      const response = await bookService.getDataById(this.id)
+      const response = await BookService2.getDataById(this.id)
       this.form.id = response.data.id
       this.form.name = response.data.name
       this.form.author = response.data.author

@@ -1,42 +1,42 @@
-import HttpService from './base.service/HttpService.js'
+import service from '../config/service.config'
 
-export default class BookService2 extends HttpService {
-  static api = process.env.VUE_APP_ROOT_API
-
+const BookService2 = {
   getAllData(pageNo, pageSize, sortBy) {
     const end_point = 'book/findall?pageNo=' + pageNo + '&pageSize=' + pageSize + '&sortBy=' +sortBy
-    const api = this.api + end_point
-    return this.get(api)
-  }
+    const api = process.env.VUE_APP_ROOT_API + end_point
+    return service.get(api)
+  },
 
   getAllByName(name, sortBy) {
     const end_point = 'book/findallbyname?name=' + name + '&sortBy=' +sortBy
-    const api = this.api + end_point
-    return this.get(api)
-  }
+    const api = process.env.VUE_APP_ROOT_API + end_point
+    return service.get(api)
+  },
 
   getDataById(id) {
     const end_point = 'book/findbyid/' + id
-    const api = this.api + end_point
-    return this.get(api)
-  }
+    const api = process.env.VUE_APP_ROOT_API + end_point
+    return service.get(api)
+  },
 
   addBook(data) {
     const end_point = 'book/'
-    const api = this.api + end_point
-    return this.postBodyJsonAndParam(data, api, null)
-  }
+    const api = process.env.VUE_APP_ROOT_API + end_point
+    return service.post(api, data)
+  },
 
   editBook(id, data) {
     const end_point = 'book/' + id
-    const api = this.api + end_point
-    return this.put(data, api, null)
-  }
+    const api = process.env.VUE_APP_ROOT_API + end_point
+    return service.put(api, data)
+  },
 
   deleteBook(id) {
     const end_point = 'book/' + id
-    const api = this.api + end_point
-    return this.delete(api)
+    const api = process.env.VUE_APP_ROOT_API + end_point
+    return service.delete(api)
   }
 
 }
+
+export default BookService2

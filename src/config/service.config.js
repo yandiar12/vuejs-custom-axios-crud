@@ -27,14 +27,18 @@ if (process.env.NODE_ENV === 'development') {
     console.log('Request Interceptor', config)
     return config
   }, function (error) {
+    console.log(error)
     return Promise.reject(error)
   })
 
   // Add a response interceptor
   service.interceptors.response.use(function (response) {
     console.log('Response Interceptor', response)
-    return response
+    return response.data
   }, function (error) {
+    if (error.response !== undefined) {
+      return Promise.reject(error.response.data)  
+    }
     return Promise.reject(error)
   })
 }

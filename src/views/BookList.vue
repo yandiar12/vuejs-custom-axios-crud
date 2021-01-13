@@ -34,7 +34,6 @@
 
 <script>
 import BookService2 from '../services/BookService2.js'
-const bookService2 = BookService2.build()
 
 export default {
   name: 'list',
@@ -59,7 +58,7 @@ export default {
   methods: {
     getData: async function() {
       const max_val = 2147483647
-      const response = await bookService2.getAllData(0, max_val, 'id')
+      const response = await BookService2.getAllData(0, max_val, 'id')
       this.books = []
       if (response !== undefined) {
         this.currentPage = response.data.number + 1
@@ -74,7 +73,7 @@ export default {
     },
 
     getDataByName: async function() {
-      const response = await bookService2.getAllByName(this.searchText, 'id')
+      const response = await BookService2.getAllByName(this.searchText, 'id')
       this.books = []
       for (var i = 0; i < response.data.content.length; i++) {
         this.books.push(response.data.content[i])
@@ -82,12 +81,13 @@ export default {
     },
 
     getDataById: async function() {
-      const response = await bookService2.getDataById(25)
+      const response = await BookService2.getDataById(25)
       this.books.push(response.data)
     },
 
     deleteBook: async function(id) {
-      const response = await bookService2.deleteBook(id)
+      const response = await BookService2.deleteBook(id)
+      this.getData()
       alert(response.message)
     }
   },

@@ -1,15 +1,14 @@
-import HttpService from './base.service/HttpService.js'
+import service from '../config/service.config'
 
-export default class AuthService extends HttpService {
-  static api = process.env.VUE_APP_ROOT_API
-
+const AuthService = {
   login(data) {
-    const end_point = this.api + '/auth/signin'
-    return this.postBodyJsonAndParam(data, end_point)
-  }
-
+    const api = process.env.VUE_APP_ROOT_API + 'auth/signin'
+    return service.post(api, data)
+  },
   register(data) {
-    const end_point = this.api + '/auth/signup'
-    return this.postBodyJsonAndParam(data, end_point)
+    const api = process.env.VUE_APP_ROOT_API + 'auth/signup'
+    return service.post(api, data)
   }
 }
+
+export default AuthService
